@@ -15,7 +15,41 @@ const ll mod = 1000000007;
 
 void solve()
 {
-    
+    int n;
+    cin >> n;
+    vector<unordered_set<int>> v;
+    while (n--)
+    {
+        int k;
+        cin >> k;
+        unordered_set<int> st;
+        for (int i = 0; i < k; i++)
+        {
+            int x;
+            cin >> x;
+            st.insert(x);
+        }
+        v.push_back(st);
+    }
+    int m;
+    cin >> m;
+    while (m--)
+    {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        int nc = 0;
+        for (auto &p : v[x])
+        {
+            if (v[y].count(p))
+            {
+                nc++;
+            }
+        }
+        int nt = v[x].size() + v[y].size() - nc;
+        double ans = 1.0 * nc / nt * 100;
+        printf("%.2f%%\n", ans);
+    }
 }
 int main()
 {
