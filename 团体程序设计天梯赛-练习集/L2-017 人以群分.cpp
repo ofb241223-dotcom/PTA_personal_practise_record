@@ -18,7 +18,7 @@ void solve()
     int n;
     cin >> n;
     vector<int> v(n);
-    for (auto &x : v)
+    for (auto& x : v)
     {
         cin >> x;
     }
@@ -34,7 +34,7 @@ void solve()
     }
     cout << "Outgoing #: " << n - n / 2 << endl;
     cout << "Introverted #: " << n / 2 << endl;
-    cout << "Diff = " << abs(a - b)<<endl;
+    cout << "Diff = " << abs(a - b) << endl;
 }
 int main()
 {
