@@ -38,19 +38,27 @@ void check(int l, int r, bool mirror)
     }
     for (int i = mid; i <= r; i++)
     {
-        if (mirror && v[i] >= v[l])
+        if (mirror == 0 && v[i] < v[l])
         {
             f = 0;
             return;
         }
-        if (!mirror && v[i] < v[l])
+        if (mirror == 1 && v[i] >= v[l])
         {
             f = 0;
             return;
         }
     }
     check(l + 1, mid - 1, mirror);
+    if (f == 0)
+    {
+        return;
+    }
     check(mid, r, mirror);
+    if (f == 0)
+    {
+        return;
+    }
     post.push_back(v[l]);
 }
 void solve()
@@ -65,12 +73,10 @@ void solve()
     if (f == 1)
     {
         cout << "YES" << endl;
-        for (int i = 0; i < post.size(); i++)
+        for (int i = 0; i < n; i++)
         {
             if (i > 0)
-            {
                 cout << " ";
-            }
             cout << post[i];
         }
         return;
@@ -81,17 +87,15 @@ void solve()
     if (f == 1)
     {
         cout << "YES" << endl;
-        for (int i = 0; i < post.size(); i++)
+        for (int i = 0; i < n; i++)
         {
             if (i > 0)
-            {
                 cout << " ";
-            }
             cout << post[i];
         }
         return;
     }
-    cout << "NO";
+    cout << "NO" << endl;
 }
 int main()
 {
