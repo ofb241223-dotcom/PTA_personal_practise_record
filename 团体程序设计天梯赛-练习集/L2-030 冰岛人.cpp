@@ -13,8 +13,6 @@ typedef long long ll;
 typedef unsigned long long ull;
 const ll mod = 100000007;
 int n;
-map<string, int> gender;
-map<string, string> fa;
 bool end_with(string x, string t)
 {
     int len = t.size();
@@ -25,32 +23,53 @@ bool end_with(string x, string t)
     }
     return false;
 }
+struct person
+{
+    string ming, xin;
+    int sex, father_id = -1;
+};
 void solve()
 {
+    vector<person> v;
+    map<string, int> id;
+    map<string, string> fa;
     cin >> n;
     for (int i = 0; i < n; i++)
     {
         string ming, xin;
+        string xinn;
+        int sex;
         cin >> ming >> xin;
         if (end_with(xin, "sson"))
         {
-            string xinn = xin.substr(0, xin.size() - 4);
-            gender[ming] = 1;
+            xinn = xin.substr(0, xin.size() - 4);
+            sex = 1;
             fa[ming] = xinn;
         }
         else if (end_with(xin, "sdottir"))
         {
-            string xinn = xin.substr(0, xin.size() - 7);
-            gender[ming] = 0;
+            xinn = xin.substr(0, xin.size() - 7);
+            sex = 0;
             fa[ming] = xinn;
         }
         else if (xin.back() == 'm')
         {
-            gender[ming] = 1;
+            xinn = xin.substr(0, xin.size() - 1);
+            sex = 1;
         }
         else
         {
-            gender[ming] = 0;
+            xinn = xin.substr(0, xin.size() - 1);
+            sex = 0;
+        }
+        v.push_back({ming, xinn, sex, -1});
+        id[ming] = i;
+    }
+    for (auto& [ming, xin, sex, father_id] : v)
+    {
+        if (fa.count(ming) && id.count(fa[ming]))
+        {
+            father_id = id[fa[ming]];
         }
     }
     int m;
@@ -59,49 +78,41 @@ void solve()
     {
         string ming1, xin1, ming2, xin2;
         cin >> ming1 >> xin1 >> ming2 >> xin2;
-        if (!gender.count(ming1) || !gender.count(ming2))
+        if (!id.count(ming1) || !id.count(ming2))
         {
             cout << "NA" << endl;
         }
-        else if (gender[ming1] == gender[ming2])
+        else if (v[id[ming1]].sex == v[id[ming2]].sex)
         {
             cout << "Whatever" << endl;
         }
         else
         {
-            map<string, int> anc;
-            string cur = ming1;
+            unordered_map<int, int> anc;
+            int cur = id[ming1];
             int da = 0;
-            while (!cur.empty())
+            while (cur != -1)
             {
                 anc[cur] = da++;
-                if (!fa.count(cur))
-                {
-                    break;
-                }
-                cur = fa[cur];
+                cur = v[cur].father_id;
             }
-            bool f = 1;
-            cur = ming2;
+            bool f = 0;
+            cur = id[ming2];
             int db = 0;
-            while (!cur.empty())
+            while (cur != -1)
             {
                 if (anc.count(cur))
                 {
-                    if (anc[cur] > 4 || db > 4)
+                    if (anc[cur] < 4 || db < 4)
                     {
-                        f = 0;
+                        f = 1;
                     }
                     break;
                 }
-                if (!fa.count(cur))
-                {
-                    break;
-                }
-                cur = fa[cur];
+                cur = v[cur].father_id;
                 db++;
             }
-            if (f == 1)
+            if (f == 0)
             {
                 cout << "Yes" << endl;
             }
