@@ -13,20 +13,24 @@ typedef long long ll;
 typedef unsigned long long ull;
 const ll mod = 1000000007;
 int n;
-vector<int> g[100005];
 vector<int> dp(100005, -1);
-int dfs(int u)
+vector<int> g[100005];
+int root;
+vector<int> in(100005, 0);
+vector<int> dep(100005, 0);
+pair<int, int> ans = {-1, 0};
+void dfs(int u, int step)
 {
-    if (g[u].empty())
+    dep[u] = step;
+    if (dep[u] > ans.first)
     {
-        return dp[u] = 0;
+        ans.first = dep[u];
+        ans.second = u;
     }
-    if (dp[u] != -1)
+    for (auto &v : g[u])
     {
-        return dp[u];
+        dfs(v, step + 1);
     }
-    dp[u] = dfs(g[u][0]) + 1;
-    return dp[u];
 }
 void solve()
 {
@@ -35,23 +39,24 @@ void solve()
     {
         int k;
         cin >> k;
-        for (int j = 0; j < k; j++)
+        while (k--)
         {
             int x;
             cin >> x;
-            g[x].push_back(i);
+            in[x]++;
+            g[i].push_back(x);
         }
     }
-    int ans = -1, id;
     for (int i = 1; i <= n; i++)
     {
-        if (dfs(i) > ans)
+        if (in[i] == 0)
         {
-            ans = dp[i];
-            id = i;
+            root = i;
+            break;
         }
     }
-    cout << id;
+    dfs(root, 0);
+    cout << ans.second;
 }
 int main()
 {
