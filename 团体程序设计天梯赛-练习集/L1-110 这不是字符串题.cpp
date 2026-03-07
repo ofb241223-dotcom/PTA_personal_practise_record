@@ -17,9 +17,11 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-    string s;
-    cin.ignore();
-    cin >> s;
+    vector<int> v(n);
+    for (auto& x : v)
+    {
+        cin >> x;
+    }
     while (m--)
     {
         int op;
@@ -28,50 +30,34 @@ void solve()
         {
             int len1, len2;
             cin >> len1;
-            cin.ignore();
-            string s1;
-            getline(cin, s1);
-            cin >> len2;
-            cin.ignore();
-            string s2;
-            getline(cin, s2);
-            auto it = s.find(s1);
-            if (it != string::npos)
+            vector<int> v1(len1);
+            for (auto& x : v1)
             {
-                s.replace(it, len1, s2);
+                cin >> x;
+            }
+            cin >> len2;
+            vector<int> v2(len2);
+            for (auto& x : v2)
+            {
+                cin >> x;
+            }
+            auto it = search(v.begin(), v.end(), v1.begin(), v1.end());
+            if (it != v.end())
+            {
+                int idx = it - v.begin();
+                v.insert(v.begin() + idx + len1, v2.begin(), v2.end());
+                v.erase(v.begin() + idx, v.begin() + idx + len1);
             }
         }
         else if (op == 2)
         {
-            int num = 0;
-            vector<int> v;
-            for (auto& x : s)
-            {
-                if (x == ' ')
-                {
-                    v.push_back(num);
-                    num = 0;
-                }
-                else
-                {
-                    num = num * 10 + (x - '0');
-                }
-            }
             for (int i = 0; i < v.size() - 1; i++)
             {
                 if ((v[i] + v[i + 1]) % 2 == 0)
                 {
                     v.insert(v.begin() + i + 1, (v[i] + v[i + 1]) / 2);
+                    i++;
                 }
-            }
-            s.clear();
-            for (int i = 0; i < v.size(); i++)
-            {
-                if (i > 0)
-                {
-                    s.push_back(' ');
-                }
-                s += to_string(v[i]);
             }
         }
         else if (op == 3)
@@ -79,8 +65,16 @@ void solve()
             int l, r;
             cin >> l >> r;
             l--, r--;
-            reverse(s.begin() + l, s.begin() + r);
+            reverse(v.begin() + l, v.begin() + r + 1);
         }
+    }
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (i > 0)
+        {
+            cout << " ";
+        }
+        cout << v[i];
     }
 }
 int main()
@@ -93,4 +87,5 @@ int main()
         solve();
     return 0;
 }
+
 // @pintia code=end
